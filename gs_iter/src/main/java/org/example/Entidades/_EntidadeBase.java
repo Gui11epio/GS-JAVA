@@ -3,6 +3,13 @@ package org.example.Entidades;
 public abstract class _EntidadeBase {
     public int id;
 
+    public _EntidadeBase() {
+    }
+
+    public _EntidadeBase(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

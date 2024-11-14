@@ -4,7 +4,8 @@ import java.util.regex.Pattern;
 
 public class Cadastro extends _EntidadeBase {
 
-//    private static final Pattern senhaPadrao = Pattern.compile()
+    private static final Pattern senhaPadrao = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()_+])[0-9A-Za-z!@#$%^&*()_+]{8}$");
+    private static final Pattern emailPadrao = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[a-zA-Z0-9]+$");
 
 
     private String nome;
@@ -12,6 +13,19 @@ public class Cadastro extends _EntidadeBase {
     private String senha;
 
     public Cadastro() {
+    }
+
+    public Cadastro(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    public Cadastro(int id, String nome, String email, String senha) {
+        super(id);
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
     }
 
     public String getNome() {
@@ -27,6 +41,9 @@ public class Cadastro extends _EntidadeBase {
     }
 
     public void setEmail(String email) {
+        if(!emailPadrao.matcher(email).matches()) {
+            throw new IllegalArgumentException("Email inválido");
+        }
         this.email = email;
     }
 
@@ -35,6 +52,9 @@ public class Cadastro extends _EntidadeBase {
     }
 
     public void setSenha(String senha) {
+        if (!senhaPadrao.matcher(senha).matches()){
+            throw new IllegalArgumentException("Senha inválida");
+        }
         this.senha = senha;
     }
 
