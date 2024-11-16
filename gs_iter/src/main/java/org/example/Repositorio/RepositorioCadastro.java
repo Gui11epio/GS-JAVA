@@ -11,11 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Loggable<Cadastro> {
+
+    DataBaseConfig connection = new DataBaseConfig();
     @Override
     public void adicionar(Cadastro cadastro) {
         String sql = "INSERT INTO Cadastro(nome,email,senha) VALUES (?,?,?)";
 
-        try(Connection conn = DataBaseConfig.getConnection();
+        try(Connection conn = connection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
 
             stmt.setString(1, cadastro.getNome());
@@ -36,7 +38,7 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
         String sql = "SELECT * FROM Cadastro";
         ArrayList<Cadastro> cadastros = new ArrayList<>();
 
-        try(Connection conn = DataBaseConfig.getConnection();
+        try(Connection conn = connection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery()){
 
@@ -59,7 +61,7 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
     public void editar(Cadastro cadastro, int id) {
         String sql = "UPDATE Cadastro SET nome = ?, email = ?, senha = ? WHERE id = ?";
 
-        try(Connection conn = DataBaseConfig.getConnection();
+        try(Connection conn = connection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
 
             stmt.setString(1, cadastro.getNome());
@@ -82,11 +84,74 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
 
     @Override
     public void excluir(int id) {
+        String sql = "DELETE FROM Cadastro WHERE id = ?";
+
+        try (Connection conn = connection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1,id);
+            int rowsDeleted = stmt.executeUpdate();
+            if (rowsDeleted > 0){
+                logInfo("Usuário removido com sucesso");
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            logInfo("Erro ao deletar");
+        }
 
     }
 
     @Override
     public Cadastro buscarPorId(int id) {
-        return null;
+        String sql = "SELECT * FROM Cadastro WHERE id = ?";
+        Cadastro cadastro = null;
+
+        try(Connection conn = connection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                cadastro = new Cadastro();
+                cadastro.setId(rs.getInt("id"));
+                cadastro.setNome(rs.getString("nome"));
+                cadastro.setEmail(rs.getString("email"));
+                cadastro.setSenha(rs.getString("senha"));
+            }
+            return cadastro;
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            logInfo("Erro na busca por id");
+        }
+
+        return cadastro;
+    }
+
+    public Cadastro acharPorEmail(String email) {
+        String sql = "SELECT * FROM Cadastro WHERE email = ?";
+        Cadastro cadastro = null;
+
+        try (Connection conn = connection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                cadastro = new Cadastro();
+                cadastro.setId(rs.getInt("id"));
+                cadastro.setNome(rs.getString("nome"));
+                cadastro.setEmail(rs.getString("email"));
+                cadastro.setSenha(rs.getString("senha"));
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+            logInfo("Erro ao buscar por email");
+        }
+
+        return cadastro;
     }
 }
