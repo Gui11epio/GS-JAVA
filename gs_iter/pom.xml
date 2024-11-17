@@ -44,7 +44,7 @@
         </dependency>
 
 
-         <dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
         </dependency>
@@ -70,18 +70,15 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
-                    <mainClass>org.example.Main</mainClass>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.example.Main</mainClass> <!-- Substitua pelo pacote e classe principal -->
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
@@ -97,6 +94,5 @@
         <jersey.version>4.0.0-M1</jersey.version>
         <junit-jupiter.version>5.10.1</junit-jupiter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <surefire.mvn.plugin.version>3.2.1</surefire.mvn.plugin.version>
     </properties>
 </project>
