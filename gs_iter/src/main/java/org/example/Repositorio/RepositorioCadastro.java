@@ -38,48 +38,52 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
         String sql = "SELECT * FROM Cadastro";
         ArrayList<Cadastro> cadastros = new ArrayList<>();
 
-        try(Connection conn = connection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()){
+        try (Connection conn = connection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Cadastro cadastro = new Cadastro();
                 cadastro.setId(rs.getInt("id"));
                 cadastro.setNome(rs.getString("nome"));
                 cadastro.setEmail(rs.getString("email"));
+                cadastro.setSenha(rs.getString("senha")); // Adicionado a senha
                 cadastros.add(cadastro);
             }
+            logInfo("Listagem de usuários realizada com sucesso");
+
         } catch (SQLException e) {
             e.printStackTrace();
-            logInfo("Erro ao mostrar");
+            logInfo("Erro ao listar usuários");
         }
 
         return cadastros;
     }
 
+
     @Override
     public void editar(Cadastro cadastro, int id) {
         String sql = "UPDATE Cadastro SET nome = ?, email = ?, senha = ? WHERE id = ?";
 
-        try(Connection conn = connection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)){
+        try (Connection conn = connection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, cadastro.getNome());
             stmt.setString(2, cadastro.getEmail());
-            stmt.setString(2, cadastro.getSenha());
-            stmt.setInt(3, cadastro.getId());
+            stmt.setString(3, cadastro.getSenha());
+            stmt.setInt(4, id); // Corrigido para usar o ID do parâmetro
 
             int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0){
-                logInfo("Usuário atualizado com sucesso");
+            if (rowsUpdated > 0) {
+                logInfo("Usuário com ID " + id + " atualizado com sucesso");
             }
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-            logInfo("Erro ao Atualizar");
+            logInfo("Erro ao atualizar usuário com ID " + id);
         }
-
     }
+
 
 
     @Override
