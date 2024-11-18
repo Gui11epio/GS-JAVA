@@ -3,14 +3,13 @@ package org.example.Resource;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.example.Entidades.Cadastro;
+import org.example.Entidades.ContaUsuario;
 import org.example.Entidades.Login;
 import org.example.Repositorio.RepositorioCadastro;
 import org.example.Service.CadastroService;
 
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -27,21 +26,21 @@ public class CadastroResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Cadastro> getAllCadastro() {
+    public List<ContaUsuario> getAllCadastro() {
         return repositorioCadastro.exibir();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createCadastro(Cadastro cadastro) {
-        if (cadastro.getNome() == null || cadastro.getNome().isEmpty()) {
+    public Response createCadastro(ContaUsuario contaUsuario) {
+        if (contaUsuario.getNome() == null || contaUsuario.getNome().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("O nome é obrigatório").build();
         }
-        if (cadastro.getEmail() == null || cadastro.getEmail().isEmpty()) {
+        if (contaUsuario.getEmail() == null || contaUsuario.getEmail().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("O email é obrigatório").build();
         }
         try {
-            cadastroService.Criar(cadastro);
+            cadastroService.Criar(contaUsuario);
             return Response.status(Response.Status.CREATED).entity("Cadastro criado com sucesso").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -51,9 +50,9 @@ public class CadastroResource {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateCadastro(@PathParam("id") int id, Cadastro cadastro) {
+    public Response updateCadastro(@PathParam("id") int id, ContaUsuario contaUsuario) {
         try {
-            cadastroService.Atualizar(cadastro, id);
+            cadastroService.Atualizar(contaUsuario, id);
             return Response.status(Response.Status.OK).entity("Cadastro atualizado com sucesso").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -63,8 +62,8 @@ public class CadastroResource {
     @DELETE
     @Path("/{id}")
     public Response deleteCadastro(@PathParam("id") int id) {
-        Cadastro cadastro = repositorioCadastro.buscarPorId(id);
-        if (cadastro != null) {
+        ContaUsuario contaUsuario = repositorioCadastro.buscarPorId(id);
+        if (contaUsuario != null) {
             repositorioCadastro.excluir(id);
             return Response.status(Response.Status.OK).entity("Cadastro excluído com sucesso").build();
         } else {
@@ -78,8 +77,8 @@ public class CadastroResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(Login loginRequest) {
         try {
-            Cadastro cadastro = cadastroService.authenticate(loginRequest.getEmail(), loginRequest.getSenha());
-            return Response.status(Response.Status.OK).entity(cadastro).build();
+            ContaUsuario contaUsuario = cadastroService.authenticate(loginRequest.getEmail(), loginRequest.getSenha());
+            return Response.status(Response.Status.OK).entity(contaUsuario).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
         }

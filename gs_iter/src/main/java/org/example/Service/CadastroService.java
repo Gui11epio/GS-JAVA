@@ -1,6 +1,6 @@
 package org.example.Service;
 
-import org.example.Entidades.Cadastro;
+import org.example.Entidades.ContaUsuario;
 import org.example.Log.Loggable;
 import org.example.Repositorio.RepositorioCadastro;
 
@@ -12,13 +12,13 @@ public class CadastroService implements Loggable<CadastroService> {
         RepositorioCadastro repositorioCadastro = new RepositorioCadastro();
     }
 
-    public boolean Criar(Cadastro cadastro){
-        java.util.Map<Boolean, String> validation = cadastro.validate();
+    public boolean Criar(ContaUsuario contaUsuario){
+        java.util.Map<Boolean, String> validation = contaUsuario.validate();
         try {
             if(validation.containsKey(false)) {
                 throw new IllegalArgumentException(validation.get(false).toString());
             } else {
-                repositorioCadastro.adicionar(cadastro);
+                repositorioCadastro.adicionar(contaUsuario);
                 return true;
             }
         } catch (Exception e) {
@@ -26,13 +26,13 @@ public class CadastroService implements Loggable<CadastroService> {
         }
     }
 
-    public void Atualizar(Cadastro cadastro, int id) {
+    public void Atualizar(ContaUsuario contaUsuario, int id) {
         try {
-            java.util.Map<Boolean, String> validation = cadastro.validate();
+            java.util.Map<Boolean, String> validation = contaUsuario.validate();
             if (validation.containsKey(false)) {
                 throw new IllegalArgumentException(validation.get(false).toString());
             } else {
-                repositorioCadastro.editar(cadastro, id);
+                repositorioCadastro.editar(contaUsuario, id);
                 logInfo("Cadastro atualizado com sucesso");
             }
         } catch (Exception e) {
@@ -42,10 +42,10 @@ public class CadastroService implements Loggable<CadastroService> {
     }
 
 
-    public Cadastro authenticate(String email, String senha) {
-        Cadastro cadastro = repositorioCadastro.acharPorEmail(email);
-        if (cadastro != null && cadastro.getSenha().equals(senha)) {
-            return cadastro;
+    public ContaUsuario authenticate(String email, String senha) {
+        ContaUsuario contaUsuario = repositorioCadastro.acharPorEmail(email);
+        if (contaUsuario != null && contaUsuario.getSenha().equals(senha)) {
+            return contaUsuario;
         }
         throw new IllegalArgumentException("Credenciais inválidas");
     }

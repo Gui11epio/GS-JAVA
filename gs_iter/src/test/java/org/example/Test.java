@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.Entidades.Cadastro;
+import org.example.Entidades.ContaUsuario;
 import org.example.Repositorio.RepositorioCadastro;
 
 import java.sql.SQLException;
@@ -10,11 +10,11 @@ public class Test {
         RepositorioCadastro repositorioCadastro = new RepositorioCadastro();
 
         // Criando Cadastro
-        Cadastro cadastro1 = new Cadastro();
-        cadastro1.setNome("João");
-        cadastro1.setEmail("joao@email.com");
-        cadastro1.setSenha("A1b@cD!e");
-        repositorioCadastro.adicionar(cadastro1);
+        ContaUsuario contaUsuario1 = new ContaUsuario();
+        contaUsuario1.setNome("João");
+        contaUsuario1.setEmail("joao@email.com");
+        contaUsuario1.setSenha("A1b@cD!e");
+        repositorioCadastro.adicionar(contaUsuario1);
 
 //        Cadastro cadastro2 = new Cadastro();
 //        cadastro2.setNome("Maria");
@@ -29,8 +29,8 @@ public class Test {
 //        repositorioCadastro.adicionar(cadastro3);
 
         // Atualizando e listando Clientes
-        cadastro1.setEmail("joao@gmail.com");
-        repositorioCadastro.editar(cadastro1, 1);
+        contaUsuario1.setEmail("joao@gmail.com");
+        repositorioCadastro.editar(contaUsuario1, 1);
         System.out.println(repositorioCadastro.exibir());
 
     }

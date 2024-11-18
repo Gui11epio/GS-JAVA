@@ -1,6 +1,6 @@
 package org.example.Repositorio;
 
-import org.example.Entidades.Cadastro;
+import org.example.Entidades.ContaUsuario;
 import org.example.Infraestrutura.DataBaseConfig;
 import org.example.Log.Loggable;
 
@@ -10,19 +10,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Loggable<Cadastro> {
+public class RepositorioCadastro implements RepositorioGenerico<ContaUsuario>, Loggable<ContaUsuario> {
 
     DataBaseConfig connection = new DataBaseConfig();
     @Override
-    public void adicionar(Cadastro cadastro) {
+    public void adicionar(ContaUsuario contaUsuario) {
         String sql = "INSERT INTO Cadastro(nome,email,senha) VALUES (?,?,?)";
 
         try(Connection conn = connection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
 
-            stmt.setString(1, cadastro.getNome());
-            stmt.setString(2, cadastro.getEmail());
-            stmt.setString(3, cadastro.getSenha());
+            stmt.setString(1, contaUsuario.getNome());
+            stmt.setString(2, contaUsuario.getEmail());
+            stmt.setString(3, contaUsuario.getSenha());
 
             stmt.executeUpdate();
             logInfo("Usuário cadastrado com sucesso");
@@ -34,21 +34,21 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
     }
 
     @Override
-    public ArrayList<Cadastro> exibir() {
+    public ArrayList<ContaUsuario> exibir() {
         String sql = "SELECT * FROM Cadastro";
-        ArrayList<Cadastro> cadastros = new ArrayList<>();
+        ArrayList<ContaUsuario> contaUsuarios = new ArrayList<>();
 
         try (Connection conn = connection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Cadastro cadastro = new Cadastro();
-                cadastro.setId(rs.getInt("id"));
-                cadastro.setNome(rs.getString("nome"));
-                cadastro.setEmail(rs.getString("email"));
-                cadastro.setSenha(rs.getString("senha")); // Adicionado a senha
-                cadastros.add(cadastro);
+                ContaUsuario contaUsuario = new ContaUsuario();
+                contaUsuario.setId(rs.getInt("id"));
+                contaUsuario.setNome(rs.getString("nome"));
+                contaUsuario.setEmail(rs.getString("email"));
+                contaUsuario.setSenha(rs.getString("senha")); // Adicionado a senha
+                contaUsuarios.add(contaUsuario);
             }
             logInfo("Listagem de usuários realizada com sucesso");
 
@@ -57,20 +57,20 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
             logInfo("Erro ao listar usuários");
         }
 
-        return cadastros;
+        return contaUsuarios;
     }
 
 
     @Override
-    public void editar(Cadastro cadastro, int id) {
+    public void editar(ContaUsuario contaUsuario, int id) {
         String sql = "UPDATE Cadastro SET nome = ?, email = ?, senha = ? WHERE id = ?";
 
         try (Connection conn = connection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, cadastro.getNome());
-            stmt.setString(2, cadastro.getEmail());
-            stmt.setString(3, cadastro.getSenha());
+            stmt.setString(1, contaUsuario.getNome());
+            stmt.setString(2, contaUsuario.getEmail());
+            stmt.setString(3, contaUsuario.getSenha());
             stmt.setInt(4, id); // Corrigido para usar o ID do parâmetro
 
             int rowsUpdated = stmt.executeUpdate();
@@ -107,9 +107,9 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
     }
 
     @Override
-    public Cadastro buscarPorId(int id) {
+    public ContaUsuario buscarPorId(int id) {
         String sql = "SELECT * FROM Cadastro WHERE id = ?";
-        Cadastro cadastro = null;
+        ContaUsuario contaUsuario = null;
 
         try(Connection conn = connection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -118,25 +118,25 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()) {
-                cadastro = new Cadastro();
-                cadastro.setId(rs.getInt("id"));
-                cadastro.setNome(rs.getString("nome"));
-                cadastro.setEmail(rs.getString("email"));
-                cadastro.setSenha(rs.getString("senha"));
+                contaUsuario = new ContaUsuario();
+                contaUsuario.setId(rs.getInt("id"));
+                contaUsuario.setNome(rs.getString("nome"));
+                contaUsuario.setEmail(rs.getString("email"));
+                contaUsuario.setSenha(rs.getString("senha"));
             }
-            return cadastro;
+            return contaUsuario;
 
         } catch (SQLException e){
             e.printStackTrace();
             logInfo("Erro na busca por id");
         }
 
-        return cadastro;
+        return contaUsuario;
     }
 
-    public Cadastro acharPorEmail(String email) {
+    public ContaUsuario acharPorEmail(String email) {
         String sql = "SELECT * FROM Cadastro WHERE email = ?";
-        Cadastro cadastro = null;
+        ContaUsuario contaUsuario = null;
 
         try (Connection conn = connection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -145,17 +145,17 @@ public class RepositorioCadastro implements RepositorioGenerico<Cadastro>, Logga
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()) {
-                cadastro = new Cadastro();
-                cadastro.setId(rs.getInt("id"));
-                cadastro.setNome(rs.getString("nome"));
-                cadastro.setEmail(rs.getString("email"));
-                cadastro.setSenha(rs.getString("senha"));
+                contaUsuario = new ContaUsuario();
+                contaUsuario.setId(rs.getInt("id"));
+                contaUsuario.setNome(rs.getString("nome"));
+                contaUsuario.setEmail(rs.getString("email"));
+                contaUsuario.setSenha(rs.getString("senha"));
             }
         } catch(SQLException e) {
             e.printStackTrace();
             logInfo("Erro ao buscar por email");
         }
 
-        return cadastro;
+        return contaUsuario;
     }
 }
