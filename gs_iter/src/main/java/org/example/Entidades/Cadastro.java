@@ -6,8 +6,10 @@ import java.util.regex.Pattern;
 
 public class Cadastro extends _EntidadeBase {
 
-    private static final Pattern senhaPadrao = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()_+])[0-9A-Za-z!@#$%^&*()_+]{8}$");
-    private static final Pattern emailPadrao = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[a-zA-Z0-9]+$");
+    private static final Pattern senhaPadrao = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()_+]).{8,}$");
+
+    private static final Pattern emailPadrao = Pattern.compile("^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$");
+
 
 
     private String nome;
